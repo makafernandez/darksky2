@@ -1,12 +1,17 @@
 'use strict';
 
 $(document).ready(function() {
+  $('#initial').show();
+  $('#second').hide();
+  $('#week').hide();
+
   // Vista Día
+  /*
   $('#locate').click(function() {
     $('#initial').hide();
     $('#second').show();
     $('#week').hide();
-  });
+  }); */
 
   $('#refresh').click(function() {
     window.location.reload(true);
@@ -48,55 +53,73 @@ $(document).ready(function() {
         'background-color': '#212121',
       });
     });
-});
 
-// Geolocalización usuario
-$('#locate').click(function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    $('#userLocation').append = 'Este navegador no soporta geolocalización.';
-  }
-});
+  // Geolocalización usuario
+  $('#locate').click(function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      $('#preloader').append(`
+        <div class="preloader-wrapper active" position="absolute"> 
+          <div class="spinner-layer spinner-yellow">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>  
+      `)
+    } else {
+      $('#userLocation').append('Este navegador no soporta geolocalización.');
+    }
+  });
 
-function showPosition(position) {
-  let latitude = position.coords.latitude;
-  let longitude = position.coords.longitude;
-  let location = '';
+  function showPosition(position) {
+    let latitude = position.coords.latitude;
+    let longitude = position.coords.longitude;
+    let location = '';
   
-  // Geocodificación inversa (devuelve una localidad para la posición):                            
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&result_type=locality&key=AIzaSyD3ITDAeNFr0MvgoNVODFh0JJHIxdbch_M`)                          
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data3) {
-      location = data3.results[0].address_components[0].short_name;
-    });  
+    // Geocodificación inversa (devuelve una localidad para la posición):                            
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&result_type=locality&key=AIzaSyD3ITDAeNFr0MvgoNVODFh0JJHIxdbch_M`)                          
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data3) {
+        location = data3.results[0].address_components[0].short_name;
+      });  
 
-  // Genera el pronóstico para la ubicación del usuario:
-  fetch(`https://api.darksky.net/forecast/ddd476a250882ec17bf7b60f9d91689e/${latitude},${longitude}?lang=es&units=auto`)
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-      console.log(data);
-      const actual = data.currently;
-      const daily = data.daily.data;
+    // Genera el pronóstico para la ubicación del usuario:
+    fetch(`https://api.darksky.net/forecast/ddd476a250882ec17bf7b60f9d91689e/${latitude},${longitude}?lang=es&units=auto`)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        console.log(data);
+        const actual = data.currently;
+        const daily = data.daily.data;
 
-      // Datos actuales:
-      let icon = actual.icon;
-      let summary = actual.summary;
-      let temperature = parseInt(actual.temperature);
-      let apparent = parseInt(actual.apparentTemperature); // sensación térmica
-      let precipProb = actual.precipProbability * 100; // probabilidad de precipitaciones
-      let humidity = actual.humidity * 100;
-      let uvIndex = actual.uvIndex; // indice UV
-      let windSpeed = actual.windSpeed; // velocidad del viento
-      let tempMax = parseInt(daily[0].temperatureMax);
-      let tempMin = parseInt(daily[0].temperatureMin);
+        $('#initial').hide();
+        $('#second').show();
+        $('#week').hide();
 
-      // Genera contenidos dinámicos vista Día Actual
-      $('#actual').append(`
+        // Datos actuales:
+        let icon = actual.icon;
+        let summary = actual.summary;
+        let temperature = parseInt(actual.temperature);
+        let apparent = parseInt(actual.apparentTemperature); // sensación térmica
+        let precipProb = actual.precipProbability * 100; // probabilidad de precipitaciones
+        let humidity = actual.humidity * 100;
+        let uvIndex = actual.uvIndex; // indice UV
+        let windSpeed = actual.windSpeed; // velocidad del viento
+        let tempMax = parseInt(daily[0].temperatureMax);
+        let tempMin = parseInt(daily[0].temperatureMin);
+
+        // Genera contenidos dinámicos vista Día Actual
+        $('#actual').append(`
         <div class="row">  
           <div class="col s12 center">
             <p class="city">${location}<p>
@@ -153,45 +176,45 @@ function showPosition(position) {
         </div>         
       `);
 
-      // Agrega ícono actual:
-      const skycons = new Skycons({ 
-        'color': 'rgba(255, 255, 255, 0.6)',
-        'resizeClear': true
-      });
-      skycons.add('iconActual', icon);
-      skycons.play();
+        // Agrega ícono actual:
+        const skycons = new Skycons({ 
+          'color': 'rgba(255, 255, 255, 0.6)',
+          'resizeClear': true
+        });
+        skycons.add('iconActual', icon);
+        skycons.play();
 
-      // PRONÓSTICO SEMANAL
-      let weekForecast = daily.map(el => {
-        let dayWeek = convertUnixDate(el.time);
-        let minTempDay = parseInt(el.temperatureMin);
-        let maxTempDay = parseInt(el.temperatureMax);
-        let iconDay = el.icon;
+        // PRONÓSTICO SEMANAL
+        let weekForecast = daily.map(el => {
+          let dayWeek = convertUnixDate(el.time);
+          let minTempDay = parseInt(el.temperatureMin);
+          let maxTempDay = parseInt(el.temperatureMax);
+          let iconDay = el.icon;
 
-        // Genera contenido dinámico Week Forecast:
-        $('#days').append(`
+          // Genera contenido dinámico Week Forecast:
+          $('#days').append(`
           <div class="row">
             <div class="col s6 left-align"><p class="data">${dayWeek}</p></div>
             <div class="col s6 right-align"><p class="data">mín ${minTempDay}° - ${maxTempDay}° máx</p></div>
           </div>  
         `);
 
-        // Agrega ícono diario:
-        const skycons = new Skycons({
-          'color': 'rgba(255, 255, 255, 0.6)',
-          'resizeClear': false
+          // Agrega ícono diario:
+          const skycons = new Skycons({
+            'color': 'rgba(255, 255, 255, 0.6)',
+            'resizeClear': false
+          });
+          skycons.add('iconWeek', `${iconDay}`);
+          skycons.play();
         });
-        skycons.add('iconWeek', `${iconDay}`);
-        skycons.play();
-
-      });
       
-      function convertUnixDate(unix) {
-        let timestamp = unix;
-        let pubDate = new Date(timestamp * 1000);
-        const week = new Array('Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb');
-        let formattedDate = week[pubDate.getDay()] + ' ' + pubDate.getDate();
-        return formattedDate;
-      }
-    });
-}
+        function convertUnixDate(unix) {
+          let timestamp = unix;
+          let pubDate = new Date(timestamp * 1000);
+          const week = new Array('Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb');
+          let formattedDate = week[pubDate.getDay()] + ' ' + pubDate.getDate();
+          return formattedDate;
+        }
+      });
+  }
+});
