@@ -1,0 +1,146 @@
+body {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1rem;
+}
+
+section {
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+  background-origin: border-box;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Desktop */
+@media only screen and (min-width:950px) { 
+	#welcome {
+    margin: 25rem;
+  }
+
+  .data {
+    font-size: 2m;
+    margin: 1% auto!important;
+  }
+
+  .city {
+    font-size: 2rem!important;
+  }
+
+  .container {
+    width: 100%!important;
+  }
+}
+
+/* Tablets */
+@media only screen and (min-width:750px) { 
+  #welcome {
+    margin: 4rem;
+  }
+
+  .data {
+    font-size: 2rem;
+    margin: 1% auto!important;
+  }
+
+  .city {
+    font-size: 2rem!important;
+  }
+
+  .summary p {
+    font-size: 2rem!important;
+    margin: 2% 0!important;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .detailWeather {
+    margin-top: 2rem;
+  }
+
+  .container {
+    padding
+  }
+}
+
+#welcome {
+  background-color: rgba(0, 0, 0, 0.3);
+  margin: 2rem 1rem;
+  padding: 2rem 1rem;
+}
+
+.container-fluid {
+  height: 100%!important;
+  max-height: 100vh!important;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.container {
+  /*outline: 1px solid red;*/
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  margin-top: 3vh!important;
+  margin-bottom: 1vh!important;
+  padding: 3%;
+}
+
+#logo {
+  margin: 3rem 0 2rem;
+  height: 50%;
+}
+
+#logo img {
+  width: 100%;
+}
+
+.location {
+  margin: 4rem 0;
+  height: 50%;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.8rem;
+  line-height: 1.8rem;
+  text-shadow: 1px 1px 2px rgba(150, 150, 150, 0.7);
+}
+
+#locate {
+  margin: 1rem 0;
+}
+
+#days {
+ margin: 1% auto;
+ font-size: 1.3rem;
+ color: rgba(255, 255, 255, 0.8);
+}
+
+.city {
+  font-family: 'Kanit', sans-serif;
+  font-size: 2rem;
+  margin: 0 0 1% 0;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 1px 1px 2px rgba(150, 150, 150, 0.7);
+}
+
+.detailWeather {
+  font-family: 'Roboto', sans-serif;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.data {
+  font-size: 1rem;
+  margin: 0.5% auto;
+  font-family: 'Roboto', sans-serif;
+  text-shadow: 1px 1px 2px rgba(150, 150, 150, 0.7);
+}
+
+.summary p {
+  font-size: 1.4rem;
+  margin: 1% 0 0.5% 0;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 1px 1px 2px rgba(150, 150, 150, 0.7);
+}
+
+.temperature p {
+  font-size: 2.5em;
+  margin: 0.25%;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 1px 1px 2px rgba(150, 150, 150, 0.7);
+}
